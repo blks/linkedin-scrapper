@@ -3,17 +3,26 @@ import time
 from bs4 import BeautifulSoup
 import xlsxwriter
 from tkinter import *
+import random
 
 class Linkedin():
     def getData(self):
-        driver = webdriver.Chrome('../chromedriver.exe')
+        options = webdriver.ChromeOptions()
+        options.add_argument('--log-level=3')
+        driver = webdriver.Chrome(executable_path="chromedriver",options=options)
+        driver.execute_cdp_cmd("Network.setCacheDisabled", {"cacheDisabled":True})
+        driver.set_window_size(1320,980)
+        driver.minimize_window
         driver.get('https://www.linkedin.com/login')
-        driver.find_element_by_id('username').send_keys('USER NAME') #Enter username of linkedin account here
-        driver.find_element_by_id('password').send_keys('PASSWORD')  #Enter Password of linkedin account here
+        time.sleep(random.randint(3,5))
+        driver.find_element_by_id('username').send_keys('infotrackdz@gmail.com') #Enter username of linkedin account here
+        time.sleep(random.randint(1,3))
+        driver.find_element_by_id('password').send_keys('kacem29O4')  #Enter Password of linkedin account here
+        time.sleep(random.randint(2,5))
         driver.find_element_by_xpath("//*[@type='submit']").click()
 
         #*********** Search Result ***************#
-        search_key = "data analyst" # Enter your Search key here to find people
+        search_key = "cherfa youcef" # Enter your Search key here to find people
         key = search_key.split()
         keyword = ""
         for key1 in key:
@@ -25,12 +34,13 @@ class Linkedin():
 
         for no in range(1,30):
             start = "&page={}".format(no) 
-            search_url = "https://www.linkedin.com/search/results/people/?keywords={}&origin=SUGGESTION{}".format(keyword,start)
+            search_url = "https://www.linkedin.com/search/results/content/?keywords={}&origin=SUGGESTION{}".format(keyword,start)
+            time.sleep(random.randint(5,9))
             driver.get(search_url)
             driver.maximize_window()
             for scroll in range(2):
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                time.sleep(2)
+                time.sleep(random.randint(2,9))
             search = BeautifulSoup(driver.page_source,'lxml')
             peoples = search.findAll('a', attrs = {'data-control-name':'search_srp_result'})
             count = 0
